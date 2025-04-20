@@ -5,21 +5,24 @@ import { encrypt } from "../utils/encryption";
 
 const schema = mongoose.Schema;
 
-const UserSchema = new schema<IUser>({
-  fullName: { type: Schema.Types.String, required: true },
-  username: { type: Schema.Types.String, required: true, unique: true },
-  email: { type: Schema.Types.String, required: true, unique: true },
-  password: { type: Schema.Types.String, required: true },
-  role: {
-    type: Schema.Types.String,
-    required: true,
-    enum: [Roles.USER, Roles.ADMIN],
-    default: Roles.USER,
+const UserSchema = new schema<IUser>(
+  {
+    fullName: { type: Schema.Types.String, required: true },
+    username: { type: Schema.Types.String, required: true, unique: true },
+    email: { type: Schema.Types.String, required: true, unique: true },
+    password: { type: Schema.Types.String, required: true },
+    role: {
+      type: Schema.Types.String,
+      required: true,
+      enum: [Roles.USER, Roles.ADMIN],
+      default: Roles.USER,
+    },
+    profilePicture: { type: Schema.Types.String },
+    isActive: { type: Schema.Types.Boolean, default: false },
+    activationCode: { type: Schema.Types.String },
   },
-  profilePicture: { type: Schema.Types.String },
-  isActive: { type: Schema.Types.Boolean, default: false },
-  activationCode: { type: Schema.Types.String },
-});
+  { timestamps: true }
+);
 
 // encryption setting before create user
 UserSchema.pre("save", function (next) {
