@@ -1,10 +1,10 @@
 import { Types } from "mongoose";
 import UserModel from "../../model/user.model";
 import {
-  ILogin,
-  IRegister,
+  IRegisterRequest,
+  ILoginRequest,
+  IRegisterResponse,
   IResponseLogin,
-  IResponseRegister,
 } from "../../types/auth";
 import { encrypt } from "../../utils/encryption";
 import { generateToken } from "../../utils/jwt";
@@ -13,46 +13,46 @@ import { Validation } from "../../utils/validation";
 import { AuthValidation } from "./auth.validation";
 
 export const AuthService = {
-  register: async (request: IRegister): Promise<IResponseRegister> => {
-    const validateRequest = Validation.validate(
+  register: async (request: IRegisterRequest): Promise<IRegisterResponse> => {
+    const validatedRequest = Validation.validate(
       AuthValidation.REGISTER,
       request
-    ) as Required<IRegister>;
+    ) as Required<IRegisterRequest>;
 
     const existingEmailOrUsername = await UserModel.findOne({
       $or: [
-        { email: validateRequest.email },
-        { username: validateRequest.username },
+        { email: validatedRequest.email },
+        { username: validatedRequest.username },
       ],
     });
     if (existingEmailOrUsername) {
       throw ResponseError.BAD_REQUEST("Email or username already exists");
     }
     return UserModel.create({
-      fullName: validateRequest.fullName,
-      username: validateRequest.username,
-      email: validateRequest.email,
-      password: validateRequest.password,
+      fullName: validatedRequest.fullName,
+      username: validatedRequest.username,
+      email: validatedRequest.email,
+      password: validatedRequest.password,
     });
   },
 
-  login: async (request: ILogin): Promise<IResponseLogin> => {
-    const validateRequest = Validation.validate(
+  login: async (request: ILoginRequest): Promise<IResponseLogin> => {
+    const validatedRequest = Validation.validate(
       AuthValidation.LOGIN,
       request
-    ) as Required<ILogin>;
+    ) as Required<ILoginRequest>;
 
     const user = await UserModel.findOne({
       $or: [
-        { email: validateRequest.identifier },
-        { username: validateRequest.identifier },
+        { email: validatedRequest.identifier },
+        { username: validatedRequest.identifier },
       ],
       isActive: true,
     });
     if (!user) throw ResponseError.BAD_REQUEST("User not found");
 
     const validatePassword: boolean =
-      encrypt(validateRequest.password) === user.password;
+      encrypt(validatedRequest.password) === user.password;
     if (!validatePassword) throw ResponseError.BAD_REQUEST("User not found");
 
     const token = generateToken({
@@ -64,7 +64,7 @@ export const AuthService = {
     });
     return token;
   },
-  profile: async (id: Types.ObjectId): Promise<IResponseRegister> => {
+  profile: async (id: Types.ObjectId): Promise<IRegisterResponse> => {
     const result = await UserModel.findById(id);
     if (!result) throw ResponseError.BAD_REQUEST("User not found");
     return result;

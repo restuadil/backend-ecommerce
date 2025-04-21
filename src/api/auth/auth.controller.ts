@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService } from "./auth.service";
-import { successResponse } from "../../utils/response";
+import { SuccessResponse } from "../../utils/response";
 import { IAuthRequest } from "../../types/auth";
 import { logger } from "../../config/logger";
 export const AuthController = {
@@ -8,7 +8,7 @@ export const AuthController = {
     try {
       logger.info(`Register request: ${JSON.stringify(req.body)}`);
       const response = await AuthService.register(req.body);
-      return successResponse(res, "User created successfully", response, 201);
+      return SuccessResponse(res, "User created successfully", response, 201);
     } catch (error) {
       next(error);
     }
@@ -17,7 +17,7 @@ export const AuthController = {
     try {
       logger.info(`Login request: ${JSON.stringify(req.body)}`);
       const response = await AuthService.login(req.body);
-      return successResponse(res, "User logged in successfully", response);
+      return SuccessResponse(res, "User logged in successfully", response);
     } catch (error) {
       next(error);
     }
@@ -25,6 +25,6 @@ export const AuthController = {
   profile: async (req: IAuthRequest, res: Response, next: NextFunction) => {
     logger.info(`Profile request`);
     const response = await AuthService.profile(req.user?.id);
-    successResponse(res, "Profile fetched successfully", response);
+    SuccessResponse(res, "Profile fetched successfully", response);
   },
 };

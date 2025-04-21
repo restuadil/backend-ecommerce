@@ -2,8 +2,8 @@ import { z } from "zod";
 import { AuthValidation } from "../api/auth/auth.validation";
 import { Request } from "express";
 
-export type IRegister = z.infer<typeof AuthValidation.REGISTER>;
-export type ILogin = z.infer<typeof AuthValidation.LOGIN>;
+export type IRegisterRequest = z.infer<typeof AuthValidation.REGISTER>;
+export type ILoginRequest = z.infer<typeof AuthValidation.LOGIN>;
 export interface IAuthRequest extends Request {
   user?: IUserToken;
 }
@@ -14,8 +14,8 @@ export type IUserToken = {
   email: string;
   fullName: string;
 };
-export type IResponseRegister = {
-  id: Types.ObjectId;
+export type IRegisterResponse = {
+  _id: Types.ObjectId;
   fullName: string;
   username: string;
   email: string;

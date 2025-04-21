@@ -2,7 +2,7 @@
 
 import { Response } from "express";
 
-export const successResponse = (
+export const SuccessResponse = (
   res: Response,
   message: string,
   data?: unknown,
@@ -15,7 +15,7 @@ export const successResponse = (
   });
 };
 
-export const errorResponse = (
+export const ErrorResponse = (
   res: Response,
   message: string,
   statusCode = 500
