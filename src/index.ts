@@ -6,6 +6,7 @@ import { env } from "./config/env";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { logMiddleware } from "./middlewares/log.middleware";
 import { router } from "./routes/api";
+import { notFoundMiddleware } from "./middlewares/notFound.middleware";
 
 async function init() {
   try {
@@ -24,7 +25,10 @@ async function init() {
       res.send("Server is Running");
     });
     app.use("/api", router);
+
+    app.use(notFoundMiddleware);
     app.use(errorMiddleware);
+
     app.listen(env.PORT, () => {
       logger.info(`App listening on ${env.PORT}`);
     });

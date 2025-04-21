@@ -2,7 +2,8 @@ import { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
 import { ResponseError } from "../utils/response.error";
 import { logger } from "../config/logger";
-import { errorResponse } from "../utils/response";
+import { ErrorResponse } from "../utils/response";
+import mongoose from "mongoose";
 
 export const errorMiddleware: ErrorRequestHandler = (error, req, res, next) => {
   logger.error(error);
@@ -13,7 +14,7 @@ export const errorMiddleware: ErrorRequestHandler = (error, req, res, next) => {
     );
 
     if (hasUnrecognizedKeys) {
-      errorResponse(
+      ErrorResponse(
         res,
         "Invalid query parameters: Unrecognized keys are not allowed.",
         400
@@ -24,19 +25,22 @@ export const errorMiddleware: ErrorRequestHandler = (error, req, res, next) => {
     const errorMessages = error.issues.map(
       (issue) => `${issue.path.join(".")}: ${issue.message}`
     );
-    errorResponse(res, `Validation Error: ${errorMessages.join("; ")}`, 400);
+    ErrorResponse(res, `Validation Error: ${errorMessages.join("; ")}`, 400);
     return;
   }
 
   if (error instanceof ResponseError) {
-    errorResponse(res, error.message, error.statusCode);
+    ErrorResponse(res, error.message, error.statusCode);
     return;
   }
-
+  if (error instanceof mongoose.Error.CastError) {
+    ErrorResponse(res, "Invalid ID format", 400);
+    return;
+  }
   if (error instanceof Error) {
-    errorResponse(res, error.message, 500);
+    ErrorResponse(res, error.message, 500);
     return;
   }
 
-  errorResponse(res, "Internal Server Error", 500);
+  ErrorResponse(res, "Internal Server Error", 500);
 };
