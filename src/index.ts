@@ -1,5 +1,6 @@
 import { Application, Request, Response } from "express";
 import express from "express";
+import cors from "cors";
 import { logger } from "./config/logger";
 import { conectDB } from "./config/db";
 import { env } from "./config/env";
@@ -18,6 +19,7 @@ async function init() {
     // middlewares
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+    app.use(cors());
 
     app.use(logMiddleware);
 

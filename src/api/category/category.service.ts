@@ -36,7 +36,7 @@ export const CategoryService = {
       });
     }
 
-    const [result, total] = await Promise.all([
+    const [response, total] = await Promise.all([
       CategoryModel.find(filter)
         .select("_id name description icon")
         .sort({ createdAt: -1 })
@@ -45,17 +45,17 @@ export const CategoryService = {
         .exec(),
       CategoryModel.countDocuments(filter),
     ]);
-    if (result.length === 0)
+    if (response.length === 0)
       throw ResponseError.NOT_FOUND("Category not found");
 
     const pagination: IPagination = Pagination(total, page, limit);
 
-    return { response: result, pagination };
+    return { response, pagination };
   },
   getById: async (id: Types.ObjectId): Promise<ICategoryResponse> => {
-    const result = await CategoryModel.findById(id);
-    if (!result) throw ResponseError.NOT_FOUND("Category not found");
-    return result;
+    const response = await CategoryModel.findById(id);
+    if (!response) throw ResponseError.NOT_FOUND("Category not found");
+    return response;
   },
   create: async (request: ICategory): Promise<ICategoryResponse> => {
     const validatedRequest = Validation.validate(
@@ -85,17 +85,21 @@ export const CategoryService = {
     if (existingCategory)
       throw ResponseError.BAD_REQUEST("Category already exists");
 
-    const result = await CategoryModel.findByIdAndUpdate(id, validatedRequest, {
-      new: true,
-    });
+    const response = await CategoryModel.findByIdAndUpdate(
+      id,
+      validatedRequest,
+      {
+        new: true,
+      }
+    );
 
-    if (!result) throw ResponseError.NOT_FOUND("Category not found");
+    if (!response) throw ResponseError.NOT_FOUND("Category not found");
 
-    return result;
+    return response;
   },
   delete: async (id: Types.ObjectId): Promise<ICategoryResponse> => {
-    const result = await CategoryModel.findByIdAndDelete(id);
-    if (!result) throw ResponseError.NOT_FOUND("Category not found");
-    return result;
+    const response = await CategoryModel.findByIdAndDelete(id);
+    if (!response) throw ResponseError.NOT_FOUND("Category not found");
+    return response;
   },
 };

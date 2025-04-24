@@ -1,18 +1,6 @@
 import { z } from "zod";
 
-export const BrandValidation = {
-  CREATE: z.object({
-    name: z.string().min(2).max(100),
-    description: z.string().min(2).max(100),
-    banner: z.string(),
-    logo: z.string(),
-  }),
-  UPDATE: z.object({
-    name: z.string().min(2).max(100).optional(),
-    description: z.string().min(2).max(100).optional(),
-    banner: z.string().optional(),
-    logo: z.string().optional(),
-  }),
+export const UserValidation = {
   QUERY: z
     .object({
       search: z.string().optional(),

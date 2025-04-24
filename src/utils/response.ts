@@ -8,10 +8,21 @@ export const SuccessResponse = (
   data?: unknown,
   statusCode = 200
 ) => {
+  const responseData =
+    data && typeof data === "object" && "response" in data
+      ? data.response
+      : data;
+  const pagination =
+    data && typeof data === "object" && "pagination" in data
+      ? data.pagination
+      : undefined;
+
   res.status(statusCode).json({
     success: true,
+    statusCode,
     message,
-    data: data || null,
+    data: responseData ?? null,
+    pagination: pagination,
   });
 };
 
