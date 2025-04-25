@@ -4,6 +4,7 @@ import { authMiddleware } from "../middlewares/auth.middleware";
 import { CategoryController } from "../api/category/category.controller";
 import { UserController } from "../api/user/user.controller";
 import { BrandController } from "../api/brand/brand.controller";
+import { ProductController } from "../api/product/product.controller";
 
 export const router = Router();
 router.post("/auth/register", AuthController.register);
@@ -21,5 +22,11 @@ router.post("/brand", authMiddleware, BrandController.create);
 router.put("/brand/:id", authMiddleware, BrandController.update);
 router.delete("/brand/:id", authMiddleware, BrandController.delete);
 router.get("/brand/:id", authMiddleware, BrandController.getById);
+
+router.get("/products", ProductController.get);
+router.get("/product/:id", ProductController.getById);
+router.post("/product", authMiddleware, ProductController.create);
+router.put("/product/:id", authMiddleware, ProductController.update);
+router.delete("/product/:id", authMiddleware, ProductController.delete);
 
 router.get("/users", UserController.get);
