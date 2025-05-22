@@ -45,6 +45,7 @@ export const BrandController = {
       const response = await BrandService.delete(
         req.params.id as unknown as Types.ObjectId
       );
+      SuccessResponse(res, "Brand deleted successfully", response);
     } catch (error) {
       next(error);
     }

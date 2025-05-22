@@ -47,7 +47,6 @@ export const AuthService = {
         { email: validatedRequest.identifier },
         { username: validatedRequest.identifier },
       ],
-      isActive: true,
     });
     if (!user) throw ResponseError.BAD_REQUEST("User not found");
 
@@ -68,5 +67,24 @@ export const AuthService = {
     const result = await UserModel.findById(id);
     if (!result) throw ResponseError.BAD_REQUEST("User not found");
     return result;
+  },
+  resetPassword: async (
+    id: Types.ObjectId,
+    password: string
+  ): Promise<IRegisterResponse> => {
+    const user = await UserModel.findById(id);
+    if (!user) throw ResponseError.BAD_REQUEST("User not found");
+
+    if (encrypt(user.password) !== password) {
+      throw ResponseError.BAD_REQUEST("Password is not valid");
+    }
+    const updatedPassword = await UserModel.findByIdAndUpdate(
+      id,
+      { password: encrypt(password) },
+      { new: true }
+    );
+    if (!updatedPassword) throw ResponseError.BAD_REQUEST("User not found");
+
+    return updatedPassword;
   },
 };
