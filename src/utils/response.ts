@@ -1,5 +1,3 @@
-// src/utils/response.ts
-
 import { Response } from "express";
 
 export const SuccessResponse = (
@@ -32,7 +30,7 @@ export const ErrorResponse = (
   statusCode = 500
 ): void => {
   res.status(statusCode).json({
-    success: false,
+    status: false,
     statusCode,
     message,
     data: null,
