@@ -18,7 +18,7 @@ export const SuccessResponse = (
       : undefined;
 
   res.status(statusCode).json({
-    success: true,
+    status: true,
     statusCode,
     message,
     data: responseData ?? null,
