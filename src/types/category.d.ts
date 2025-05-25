@@ -6,7 +6,6 @@ export type ICategory = z.infer<typeof CategoryValidation.CREATE>;
 export type ICategoryResponse = {
   _id: Types.ObjectId;
   name: string;
-  icon: string;
   createdAt?: Date;
   updatedAt?: Date;
 };

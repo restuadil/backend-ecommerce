@@ -6,8 +6,6 @@ const schema = mongoose.Schema;
 const CateogrySchema = new schema<ICategory>(
   {
     name: { type: String, required: true },
-    description: { type: String, required: true },
-    icon: { type: String, required: true },
   },
   { timestamps: true }
 );

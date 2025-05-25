@@ -3,8 +3,6 @@ import { z } from "zod";
 export const CategoryValidation = {
   CREATE: z.object({
     name: z.string().min(2).max(100),
-    description: z.string().min(2).max(100),
-    icon: z.string(),
   }),
   UPDATE: z.object({
     name: z.string().min(2).max(100).optional(),
