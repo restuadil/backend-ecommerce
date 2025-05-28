@@ -33,6 +33,10 @@ export const ProductService = {
     const [response, total] = await Promise.all([
       ProductModel.find(filter)
         .select("_id name description price quantity category images brand")
+        .populate({
+          path: "category brand",
+          select: "name",
+        })
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
